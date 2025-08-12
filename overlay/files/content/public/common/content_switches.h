@@ -15,14 +15,20 @@
 
 namespace switches {
 
-// 伪装屏幕参数开关：--spoof-resolution=WxH@DPR（如 888x888@2.0）
-extern const char kSpoofResolution[];
-
 // All switches in alphabetical order. The switches should be documented
 // alongside the definition of their values in the .cc file.
+CONTENT_EXPORT extern const char kAcceleratedCanvas2dMSAASampleCount[];
+CONTENT_EXPORT extern const char kAcceptLang[];
+CONTENT_EXPORT extern const char kAccessibilityIPCTimeout[];
+CONTENT_EXPORT extern const char kAgcStartupMinVolume[];
 CONTENT_EXPORT extern const char kAllowFileAccessFromFiles[];
 CONTENT_EXPORT extern const char kAllowInsecureLocalhost[];
 CONTENT_EXPORT extern const char kAllowLoopbackInPeerConnection[];
+CONTENT_EXPORT extern const char kAllowPreCommitInput[];
+CONTENT_EXPORT extern const char kAllowRunningInsecureContent[];
+CONTENT_EXPORT extern const char kAutoAcceptThisCameraDevice[];
+CONTENT_EXPORT extern const char kAutoplayPolicy[];
+CONTENT_EXPORT extern const char kBlinkSettings[];
 CONTENT_EXPORT extern const char kAllowCommandLinePlugins[];
 CONTENT_EXPORT extern const char kAttributionReportingDebugMode[];
 CONTENT_EXPORT extern const char kAutoAcceptCameraAndMicrophoneCapture[];

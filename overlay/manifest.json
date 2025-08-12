@@ -1,4 +1,27 @@
 {
+  "version": "overlay-20250110-blink-spoof",
+  "gn_args": "is_debug=false is_official_build=false target_os=\"android\" target_cpu=\"arm64\" enable_nacl=false symbol_level=1",
+  "target": "chrome_public_apk",
+  "files": [
+    {
+      "path": "content/public/common/content_switches.cc",
+      "sha256_after": "new_blink_spoof_content_switches_cc"
+    },
+    {
+      "path": "content/public/common/content_switches.h", 
+      "sha256_after": "new_blink_spoof_content_switches_h"
+    },
+    {
+      "path": "third_party/blink/renderer/modules/screen/screen.cc",
+      "sha256_after": "new_blink_spoof_screen_cc"
+    },
+    {
+      "path": "third_party/blink/renderer/core/frame/local_dom_window.cc",
+      "sha256_after": "new_blink_spoof_local_dom_window_cc"
+    }
+  ]
+}
+{
   "version": "overlay-20250810-1",
   "gn_args": "is_debug=false is_official_build=false target_os=\"android\" target_cpu=\"arm64\" enable_nacl=false symbol_level=1",
   "target": "chrome_public_apk",
@@ -25,3 +48,878 @@
     }
   ]
 }
+{
+  "version": "overlay-20250810-1",
+  "gn_args": "is_debug=false is_official_build=false target_os=\"android\" target_cpu=\"arm64\" enable_nacl=false symbol_level=1",
+  "target": "chrome_public_apk",
+  "files": [
+    {
+      "path": "content/browser/renderer_host/render_widget_host_impl.cc",
+      "sha256_after": "542a78de8483a6cf128cf0da73b7b132de191205a6ecf246a594702641eb1cbe"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_android.cc",
+      "sha256_after": "eb40f3f056a3a943b54b3838bc4f74752448a7bbaf1b02e5cd520a4455749681"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_base.cc",
+      "sha256_after": "9959aacf5bc41fa5f930b61508fb771aada3b60c3684d96cc761dbe6ca962873"
+    },
+    {
+      "path": "content/public/common/content_switches.cc",
+      "sha256_after": "cfc5bc706274104047790d657669f86c5705fab83934150721a9d829ea100379"
+    },
+    {
+      "path": "content/public/common/content_switches.h",
+      "sha256_after": "4f08c56fa1de3dc958697e9a5eee18542f1ff1995f0d8ca9caffd03789989bee"
+    }
+  ]
+}
+{
+  "version": "overlay-20250810-1",
+  "gn_args": "is_debug=false is_official_build=false target_os=\"android\" target_cpu=\"arm64\" enable_nacl=false symbol_level=1",
+  "target": "chrome_public_apk",
+  "files": [
+    {
+      "path": "content/browser/renderer_host/render_widget_host_impl.cc",
+      "sha256_after": "542a78de8483a6cf128cf0da73b7b132de191205a6ecf246a594702641eb1cbe"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_android.cc",
+      "sha256_after": "eb40f3f056a3a943b54b3838bc4f74752448a7bbaf1b02e5cd520a4455749681"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_base.cc",
+      "sha256_after": "9959aacf5bc41fa5f930b61508fb771aada3b60c3684d96cc761dbe6ca962873"
+    },
+    {
+      "path": "content/public/common/content_switches.cc",
+      "sha256_after": "cfc5bc706274104047790d657669f86c5705fab83934150721a9d829ea100379"
+    },
+    {
+      "path": "content/public/common/content_switches.h",
+      "sha256_after": "4f08c56fa1de3dc958697e9a5eee18542f1ff1995f0d8ca9caffd03789989bee"
+    }
+  ]
+}
+{
+  "version": "overlay-20250810-1",
+  "gn_args": "is_debug=false is_official_build=false target_os=\"android\" target_cpu=\"arm64\" enable_nacl=false symbol_level=1",
+  "target": "chrome_public_apk",
+  "files": [
+    {
+      "path": "content/browser/renderer_host/render_widget_host_impl.cc",
+      "sha256_after": "542a78de8483a6cf128cf0da73b7b132de191205a6ecf246a594702641eb1cbe"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_android.cc",
+      "sha256_after": "eb40f3f056a3a943b54b3838bc4f74752448a7bbaf1b02e5cd520a4455749681"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_base.cc",
+      "sha256_after": "9959aacf5bc41fa5f930b61508fb771aada3b60c3684d96cc761dbe6ca962873"
+    },
+    {
+      "path": "content/public/common/content_switches.cc",
+      "sha256_after": "cfc5bc706274104047790d657669f86c5705fab83934150721a9d829ea100379"
+    },
+    {
+      "path": "content/public/common/content_switches.h",
+      "sha256_after": "4f08c56fa1de3dc958697e9a5eee18542f1ff1995f0d8ca9caffd03789989bee"
+    }
+  ]
+}
+{
+  "version": "overlay-20250810-1",
+  "gn_args": "is_debug=false is_official_build=false target_os=\"android\" target_cpu=\"arm64\" enable_nacl=false symbol_level=1",
+  "target": "chrome_public_apk",
+  "files": [
+    {
+      "path": "content/browser/renderer_host/render_widget_host_impl.cc",
+      "sha256_after": "542a78de8483a6cf128cf0da73b7b132de191205a6ecf246a594702641eb1cbe"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_android.cc",
+      "sha256_after": "eb40f3f056a3a943b54b3838bc4f74752448a7bbaf1b02e5cd520a4455749681"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_base.cc",
+      "sha256_after": "9959aacf5bc41fa5f930b61508fb771aada3b60c3684d96cc761dbe6ca962873"
+    },
+    {
+      "path": "content/public/common/content_switches.cc",
+      "sha256_after": "cfc5bc706274104047790d657669f86c5705fab83934150721a9d829ea100379"
+    },
+    {
+      "path": "content/public/common/content_switches.h",
+      "sha256_after": "4f08c56fa1de3dc958697e9a5eee18542f1ff1995f0d8ca9caffd03789989bee"
+    }
+  ]
+}
+{
+  "version": "overlay-20250810-1",
+  "gn_args": "is_debug=false is_official_build=false target_os=\"android\" target_cpu=\"arm64\" enable_nacl=false symbol_level=1",
+  "target": "chrome_public_apk",
+  "files": [
+    {
+      "path": "content/browser/renderer_host/render_widget_host_impl.cc",
+      "sha256_after": "542a78de8483a6cf128cf0da73b7b132de191205a6ecf246a594702641eb1cbe"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_android.cc",
+      "sha256_after": "eb40f3f056a3a943b54b3838bc4f74752448a7bbaf1b02e5cd520a4455749681"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_base.cc",
+      "sha256_after": "9959aacf5bc41fa5f930b61508fb771aada3b60c3684d96cc761dbe6ca962873"
+    },
+    {
+      "path": "content/public/common/content_switches.cc",
+      "sha256_after": "cfc5bc706274104047790d657669f86c5705fab83934150721a9d829ea100379"
+    },
+    {
+      "path": "content/public/common/content_switches.h",
+      "sha256_after": "4f08c56fa1de3dc958697e9a5eee18542f1ff1995f0d8ca9caffd03789989bee"
+    }
+  ]
+}
+{
+  "version": "overlay-20250810-1",
+  "gn_args": "is_debug=false is_official_build=false target_os=\"android\" target_cpu=\"arm64\" enable_nacl=false symbol_level=1",
+  "target": "chrome_public_apk",
+  "files": [
+    {
+      "path": "content/browser/renderer_host/render_widget_host_impl.cc",
+      "sha256_after": "542a78de8483a6cf128cf0da73b7b132de191205a6ecf246a594702641eb1cbe"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_android.cc",
+      "sha256_after": "eb40f3f056a3a943b54b3838bc4f74752448a7bbaf1b02e5cd520a4455749681"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_base.cc",
+      "sha256_after": "9959aacf5bc41fa5f930b61508fb771aada3b60c3684d96cc761dbe6ca962873"
+    },
+    {
+      "path": "content/public/common/content_switches.cc",
+      "sha256_after": "cfc5bc706274104047790d657669f86c5705fab83934150721a9d829ea100379"
+    },
+    {
+      "path": "content/public/common/content_switches.h",
+      "sha256_after": "4f08c56fa1de3dc958697e9a5eee18542f1ff1995f0d8ca9caffd03789989bee"
+    }
+  ]
+}
+{
+  "version": "overlay-20250810-1",
+  "gn_args": "is_debug=false is_official_build=false target_os=\"android\" target_cpu=\"arm64\" enable_nacl=false symbol_level=1",
+  "target": "chrome_public_apk",
+  "files": [
+    {
+      "path": "content/browser/renderer_host/render_widget_host_impl.cc",
+      "sha256_after": "542a78de8483a6cf128cf0da73b7b132de191205a6ecf246a594702641eb1cbe"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_android.cc",
+      "sha256_after": "eb40f3f056a3a943b54b3838bc4f74752448a7bbaf1b02e5cd520a4455749681"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_base.cc",
+      "sha256_after": "9959aacf5bc41fa5f930b61508fb771aada3b60c3684d96cc761dbe6ca962873"
+    },
+    {
+      "path": "content/public/common/content_switches.cc",
+      "sha256_after": "cfc5bc706274104047790d657669f86c5705fab83934150721a9d829ea100379"
+    },
+    {
+      "path": "content/public/common/content_switches.h",
+      "sha256_after": "4f08c56fa1de3dc958697e9a5eee18542f1ff1995f0d8ca9caffd03789989bee"
+    }
+  ]
+}
+{
+  "version": "overlay-20250810-1",
+  "gn_args": "is_debug=false is_official_build=false target_os=\"android\" target_cpu=\"arm64\" enable_nacl=false symbol_level=1",
+  "target": "chrome_public_apk",
+  "files": [
+    {
+      "path": "content/browser/renderer_host/render_widget_host_impl.cc",
+      "sha256_after": "542a78de8483a6cf128cf0da73b7b132de191205a6ecf246a594702641eb1cbe"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_android.cc",
+      "sha256_after": "eb40f3f056a3a943b54b3838bc4f74752448a7bbaf1b02e5cd520a4455749681"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_base.cc",
+      "sha256_after": "9959aacf5bc41fa5f930b61508fb771aada3b60c3684d96cc761dbe6ca962873"
+    },
+    {
+      "path": "content/public/common/content_switches.cc",
+      "sha256_after": "cfc5bc706274104047790d657669f86c5705fab83934150721a9d829ea100379"
+    },
+    {
+      "path": "content/public/common/content_switches.h",
+      "sha256_after": "4f08c56fa1de3dc958697e9a5eee18542f1ff1995f0d8ca9caffd03789989bee"
+    }
+  ]
+}
+{
+  "version": "overlay-20250810-1",
+  "gn_args": "is_debug=false is_official_build=false target_os=\"android\" target_cpu=\"arm64\" enable_nacl=false symbol_level=1",
+  "target": "chrome_public_apk",
+  "files": [
+    {
+      "path": "content/browser/renderer_host/render_widget_host_impl.cc",
+      "sha256_after": "542a78de8483a6cf128cf0da73b7b132de191205a6ecf246a594702641eb1cbe"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_android.cc",
+      "sha256_after": "eb40f3f056a3a943b54b3838bc4f74752448a7bbaf1b02e5cd520a4455749681"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_base.cc",
+      "sha256_after": "9959aacf5bc41fa5f930b61508fb771aada3b60c3684d96cc761dbe6ca962873"
+    },
+    {
+      "path": "content/public/common/content_switches.cc",
+      "sha256_after": "cfc5bc706274104047790d657669f86c5705fab83934150721a9d829ea100379"
+    },
+    {
+      "path": "content/public/common/content_switches.h",
+      "sha256_after": "4f08c56fa1de3dc958697e9a5eee18542f1ff1995f0d8ca9caffd03789989bee"
+    }
+  ]
+}
+{
+  "version": "overlay-20250810-1",
+  "gn_args": "is_debug=false is_official_build=false target_os=\"android\" target_cpu=\"arm64\" enable_nacl=false symbol_level=1",
+  "target": "chrome_public_apk",
+  "files": [
+    {
+      "path": "content/browser/renderer_host/render_widget_host_impl.cc",
+      "sha256_after": "542a78de8483a6cf128cf0da73b7b132de191205a6ecf246a594702641eb1cbe"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_android.cc",
+      "sha256_after": "eb40f3f056a3a943b54b3838bc4f74752448a7bbaf1b02e5cd520a4455749681"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_base.cc",
+      "sha256_after": "9959aacf5bc41fa5f930b61508fb771aada3b60c3684d96cc761dbe6ca962873"
+    },
+    {
+      "path": "content/public/common/content_switches.cc",
+      "sha256_after": "cfc5bc706274104047790d657669f86c5705fab83934150721a9d829ea100379"
+    },
+    {
+      "path": "content/public/common/content_switches.h",
+      "sha256_after": "4f08c56fa1de3dc958697e9a5eee18542f1ff1995f0d8ca9caffd03789989bee"
+    }
+  ]
+}
+{
+  "version": "overlay-20250810-1",
+  "gn_args": "is_debug=false is_official_build=false target_os=\"android\" target_cpu=\"arm64\" enable_nacl=false symbol_level=1",
+  "target": "chrome_public_apk",
+  "files": [
+    {
+      "path": "content/browser/renderer_host/render_widget_host_impl.cc",
+      "sha256_after": "542a78de8483a6cf128cf0da73b7b132de191205a6ecf246a594702641eb1cbe"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_android.cc",
+      "sha256_after": "eb40f3f056a3a943b54b3838bc4f74752448a7bbaf1b02e5cd520a4455749681"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_base.cc",
+      "sha256_after": "9959aacf5bc41fa5f930b61508fb771aada3b60c3684d96cc761dbe6ca962873"
+    },
+    {
+      "path": "content/public/common/content_switches.cc",
+      "sha256_after": "cfc5bc706274104047790d657669f86c5705fab83934150721a9d829ea100379"
+    },
+    {
+      "path": "content/public/common/content_switches.h",
+      "sha256_after": "4f08c56fa1de3dc958697e9a5eee18542f1ff1995f0d8ca9caffd03789989bee"
+    }
+  ]
+}
+{
+  "version": "overlay-20250810-1",
+  "gn_args": "is_debug=false is_official_build=false target_os=\"android\" target_cpu=\"arm64\" enable_nacl=false symbol_level=1",
+  "target": "chrome_public_apk",
+  "files": [
+    {
+      "path": "content/browser/renderer_host/render_widget_host_impl.cc",
+      "sha256_after": "542a78de8483a6cf128cf0da73b7b132de191205a6ecf246a594702641eb1cbe"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_android.cc",
+      "sha256_after": "eb40f3f056a3a943b54b3838bc4f74752448a7bbaf1b02e5cd520a4455749681"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_base.cc",
+      "sha256_after": "9959aacf5bc41fa5f930b61508fb771aada3b60c3684d96cc761dbe6ca962873"
+    },
+    {
+      "path": "content/public/common/content_switches.cc",
+      "sha256_after": "cfc5bc706274104047790d657669f86c5705fab83934150721a9d829ea100379"
+    },
+    {
+      "path": "content/public/common/content_switches.h",
+      "sha256_after": "4f08c56fa1de3dc958697e9a5eee18542f1ff1995f0d8ca9caffd03789989bee"
+    }
+  ]
+}
+{
+  "version": "overlay-20250810-1",
+  "gn_args": "is_debug=false is_official_build=false target_os=\"android\" target_cpu=\"arm64\" enable_nacl=false symbol_level=1",
+  "target": "chrome_public_apk",
+  "files": [
+    {
+      "path": "content/browser/renderer_host/render_widget_host_impl.cc",
+      "sha256_after": "542a78de8483a6cf128cf0da73b7b132de191205a6ecf246a594702641eb1cbe"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_android.cc",
+      "sha256_after": "eb40f3f056a3a943b54b3838bc4f74752448a7bbaf1b02e5cd520a4455749681"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_base.cc",
+      "sha256_after": "9959aacf5bc41fa5f930b61508fb771aada3b60c3684d96cc761dbe6ca962873"
+    },
+    {
+      "path": "content/public/common/content_switches.cc",
+      "sha256_after": "cfc5bc706274104047790d657669f86c5705fab83934150721a9d829ea100379"
+    },
+    {
+      "path": "content/public/common/content_switches.h",
+      "sha256_after": "4f08c56fa1de3dc958697e9a5eee18542f1ff1995f0d8ca9caffd03789989bee"
+    }
+  ]
+}
+{
+  "version": "overlay-20250810-1",
+  "gn_args": "is_debug=false is_official_build=false target_os=\"android\" target_cpu=\"arm64\" enable_nacl=false symbol_level=1",
+  "target": "chrome_public_apk",
+  "files": [
+    {
+      "path": "content/browser/renderer_host/render_widget_host_impl.cc",
+      "sha256_after": "542a78de8483a6cf128cf0da73b7b132de191205a6ecf246a594702641eb1cbe"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_android.cc",
+      "sha256_after": "eb40f3f056a3a943b54b3838bc4f74752448a7bbaf1b02e5cd520a4455749681"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_base.cc",
+      "sha256_after": "9959aacf5bc41fa5f930b61508fb771aada3b60c3684d96cc761dbe6ca962873"
+    },
+    {
+      "path": "content/public/common/content_switches.cc",
+      "sha256_after": "cfc5bc706274104047790d657669f86c5705fab83934150721a9d829ea100379"
+    },
+    {
+      "path": "content/public/common/content_switches.h",
+      "sha256_after": "4f08c56fa1de3dc958697e9a5eee18542f1ff1995f0d8ca9caffd03789989bee"
+    }
+  ]
+}
+{
+  "version": "overlay-20250810-1",
+  "gn_args": "is_debug=false is_official_build=false target_os=\"android\" target_cpu=\"arm64\" enable_nacl=false symbol_level=1",
+  "target": "chrome_public_apk",
+  "files": [
+    {
+      "path": "content/browser/renderer_host/render_widget_host_impl.cc",
+      "sha256_after": "542a78de8483a6cf128cf0da73b7b132de191205a6ecf246a594702641eb1cbe"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_android.cc",
+      "sha256_after": "eb40f3f056a3a943b54b3838bc4f74752448a7bbaf1b02e5cd520a4455749681"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_base.cc",
+      "sha256_after": "9959aacf5bc41fa5f930b61508fb771aada3b60c3684d96cc761dbe6ca962873"
+    },
+    {
+      "path": "content/public/common/content_switches.cc",
+      "sha256_after": "cfc5bc706274104047790d657669f86c5705fab83934150721a9d829ea100379"
+    },
+    {
+      "path": "content/public/common/content_switches.h",
+      "sha256_after": "4f08c56fa1de3dc958697e9a5eee18542f1ff1995f0d8ca9caffd03789989bee"
+    }
+  ]
+}
+{
+  "version": "overlay-20250810-1",
+  "gn_args": "is_debug=false is_official_build=false target_os=\"android\" target_cpu=\"arm64\" enable_nacl=false symbol_level=1",
+  "target": "chrome_public_apk",
+  "files": [
+    {
+      "path": "content/browser/renderer_host/render_widget_host_impl.cc",
+      "sha256_after": "542a78de8483a6cf128cf0da73b7b132de191205a6ecf246a594702641eb1cbe"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_android.cc",
+      "sha256_after": "eb40f3f056a3a943b54b3838bc4f74752448a7bbaf1b02e5cd520a4455749681"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_base.cc",
+      "sha256_after": "9959aacf5bc41fa5f930b61508fb771aada3b60c3684d96cc761dbe6ca962873"
+    },
+    {
+      "path": "content/public/common/content_switches.cc",
+      "sha256_after": "cfc5bc706274104047790d657669f86c5705fab83934150721a9d829ea100379"
+    },
+    {
+      "path": "content/public/common/content_switches.h",
+      "sha256_after": "4f08c56fa1de3dc958697e9a5eee18542f1ff1995f0d8ca9caffd03789989bee"
+    }
+  ]
+}
+{
+  "version": "overlay-20250810-1",
+  "gn_args": "is_debug=false is_official_build=false target_os=\"android\" target_cpu=\"arm64\" enable_nacl=false symbol_level=1",
+  "target": "chrome_public_apk",
+  "files": [
+    {
+      "path": "content/browser/renderer_host/render_widget_host_impl.cc",
+      "sha256_after": "542a78de8483a6cf128cf0da73b7b132de191205a6ecf246a594702641eb1cbe"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_android.cc",
+      "sha256_after": "eb40f3f056a3a943b54b3838bc4f74752448a7bbaf1b02e5cd520a4455749681"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_base.cc",
+      "sha256_after": "9959aacf5bc41fa5f930b61508fb771aada3b60c3684d96cc761dbe6ca962873"
+    },
+    {
+      "path": "content/public/common/content_switches.cc",
+      "sha256_after": "cfc5bc706274104047790d657669f86c5705fab83934150721a9d829ea100379"
+    },
+    {
+      "path": "content/public/common/content_switches.h",
+      "sha256_after": "4f08c56fa1de3dc958697e9a5eee18542f1ff1995f0d8ca9caffd03789989bee"
+    }
+  ]
+}
+{
+  "version": "overlay-20250810-1",
+  "gn_args": "is_debug=false is_official_build=false target_os=\"android\" target_cpu=\"arm64\" enable_nacl=false symbol_level=1",
+  "target": "chrome_public_apk",
+  "files": [
+    {
+      "path": "content/browser/renderer_host/render_widget_host_impl.cc",
+      "sha256_after": "542a78de8483a6cf128cf0da73b7b132de191205a6ecf246a594702641eb1cbe"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_android.cc",
+      "sha256_after": "eb40f3f056a3a943b54b3838bc4f74752448a7bbaf1b02e5cd520a4455749681"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_base.cc",
+      "sha256_after": "9959aacf5bc41fa5f930b61508fb771aada3b60c3684d96cc761dbe6ca962873"
+    },
+    {
+      "path": "content/public/common/content_switches.cc",
+      "sha256_after": "cfc5bc706274104047790d657669f86c5705fab83934150721a9d829ea100379"
+    },
+    {
+      "path": "content/public/common/content_switches.h",
+      "sha256_after": "4f08c56fa1de3dc958697e9a5eee18542f1ff1995f0d8ca9caffd03789989bee"
+    }
+  ]
+}
+{
+  "version": "overlay-20250810-1",
+  "gn_args": "is_debug=false is_official_build=false target_os=\"android\" target_cpu=\"arm64\" enable_nacl=false symbol_level=1",
+  "target": "chrome_public_apk",
+  "files": [
+    {
+      "path": "content/browser/renderer_host/render_widget_host_impl.cc",
+      "sha256_after": "542a78de8483a6cf128cf0da73b7b132de191205a6ecf246a594702641eb1cbe"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_android.cc",
+      "sha256_after": "eb40f3f056a3a943b54b3838bc4f74752448a7bbaf1b02e5cd520a4455749681"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_base.cc",
+      "sha256_after": "9959aacf5bc41fa5f930b61508fb771aada3b60c3684d96cc761dbe6ca962873"
+    },
+    {
+      "path": "content/public/common/content_switches.cc",
+      "sha256_after": "cfc5bc706274104047790d657669f86c5705fab83934150721a9d829ea100379"
+    },
+    {
+      "path": "content/public/common/content_switches.h",
+      "sha256_after": "4f08c56fa1de3dc958697e9a5eee18542f1ff1995f0d8ca9caffd03789989bee"
+    }
+  ]
+}
+{
+  "version": "overlay-20250810-1",
+  "gn_args": "is_debug=false is_official_build=false target_os=\"android\" target_cpu=\"arm64\" enable_nacl=false symbol_level=1",
+  "target": "chrome_public_apk",
+  "files": [
+    {
+      "path": "content/browser/renderer_host/render_widget_host_impl.cc",
+      "sha256_after": "542a78de8483a6cf128cf0da73b7b132de191205a6ecf246a594702641eb1cbe"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_android.cc",
+      "sha256_after": "eb40f3f056a3a943b54b3838bc4f74752448a7bbaf1b02e5cd520a4455749681"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_base.cc",
+      "sha256_after": "9959aacf5bc41fa5f930b61508fb771aada3b60c3684d96cc761dbe6ca962873"
+    },
+    {
+      "path": "content/public/common/content_switches.cc",
+      "sha256_after": "cfc5bc706274104047790d657669f86c5705fab83934150721a9d829ea100379"
+    },
+    {
+      "path": "content/public/common/content_switches.h",
+      "sha256_after": "4f08c56fa1de3dc958697e9a5eee18542f1ff1995f0d8ca9caffd03789989bee"
+    }
+  ]
+}
+{
+  "version": "overlay-20250810-1",
+  "gn_args": "is_debug=false is_official_build=false target_os=\"android\" target_cpu=\"arm64\" enable_nacl=false symbol_level=1",
+  "target": "chrome_public_apk",
+  "files": [
+    {
+      "path": "content/browser/renderer_host/render_widget_host_impl.cc",
+      "sha256_after": "542a78de8483a6cf128cf0da73b7b132de191205a6ecf246a594702641eb1cbe"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_android.cc",
+      "sha256_after": "eb40f3f056a3a943b54b3838bc4f74752448a7bbaf1b02e5cd520a4455749681"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_base.cc",
+      "sha256_after": "9959aacf5bc41fa5f930b61508fb771aada3b60c3684d96cc761dbe6ca962873"
+    },
+    {
+      "path": "content/public/common/content_switches.cc",
+      "sha256_after": "cfc5bc706274104047790d657669f86c5705fab83934150721a9d829ea100379"
+    },
+    {
+      "path": "content/public/common/content_switches.h",
+      "sha256_after": "4f08c56fa1de3dc958697e9a5eee18542f1ff1995f0d8ca9caffd03789989bee"
+    }
+  ]
+}
+{
+  "version": "overlay-20250810-1",
+  "gn_args": "is_debug=false is_official_build=false target_os=\"android\" target_cpu=\"arm64\" enable_nacl=false symbol_level=1",
+  "target": "chrome_public_apk",
+  "files": [
+    {
+      "path": "content/browser/renderer_host/render_widget_host_impl.cc",
+      "sha256_after": "542a78de8483a6cf128cf0da73b7b132de191205a6ecf246a594702641eb1cbe"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_android.cc",
+      "sha256_after": "eb40f3f056a3a943b54b3838bc4f74752448a7bbaf1b02e5cd520a4455749681"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_base.cc",
+      "sha256_after": "9959aacf5bc41fa5f930b61508fb771aada3b60c3684d96cc761dbe6ca962873"
+    },
+    {
+      "path": "content/public/common/content_switches.cc",
+      "sha256_after": "cfc5bc706274104047790d657669f86c5705fab83934150721a9d829ea100379"
+    },
+    {
+      "path": "content/public/common/content_switches.h",
+      "sha256_after": "4f08c56fa1de3dc958697e9a5eee18542f1ff1995f0d8ca9caffd03789989bee"
+    }
+  ]
+}
+{
+  "version": "overlay-20250810-1",
+  "gn_args": "is_debug=false is_official_build=false target_os=\"android\" target_cpu=\"arm64\" enable_nacl=false symbol_level=1",
+  "target": "chrome_public_apk",
+  "files": [
+    {
+      "path": "content/browser/renderer_host/render_widget_host_impl.cc",
+      "sha256_after": "542a78de8483a6cf128cf0da73b7b132de191205a6ecf246a594702641eb1cbe"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_android.cc",
+      "sha256_after": "eb40f3f056a3a943b54b3838bc4f74752448a7bbaf1b02e5cd520a4455749681"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_base.cc",
+      "sha256_after": "9959aacf5bc41fa5f930b61508fb771aada3b60c3684d96cc761dbe6ca962873"
+    },
+    {
+      "path": "content/public/common/content_switches.cc",
+      "sha256_after": "cfc5bc706274104047790d657669f86c5705fab83934150721a9d829ea100379"
+    },
+    {
+      "path": "content/public/common/content_switches.h",
+      "sha256_after": "4f08c56fa1de3dc958697e9a5eee18542f1ff1995f0d8ca9caffd03789989bee"
+    }
+  ]
+}
+{
+  "version": "overlay-20250810-1",
+  "gn_args": "is_debug=false is_official_build=false target_os=\"android\" target_cpu=\"arm64\" enable_nacl=false symbol_level=1",
+  "target": "chrome_public_apk",
+  "files": [
+    {
+      "path": "content/browser/renderer_host/render_widget_host_impl.cc",
+      "sha256_after": "542a78de8483a6cf128cf0da73b7b132de191205a6ecf246a594702641eb1cbe"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_android.cc",
+      "sha256_after": "eb40f3f056a3a943b54b3838bc4f74752448a7bbaf1b02e5cd520a4455749681"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_base.cc",
+      "sha256_after": "9959aacf5bc41fa5f930b61508fb771aada3b60c3684d96cc761dbe6ca962873"
+    },
+    {
+      "path": "content/public/common/content_switches.cc",
+      "sha256_after": "cfc5bc706274104047790d657669f86c5705fab83934150721a9d829ea100379"
+    },
+    {
+      "path": "content/public/common/content_switches.h",
+      "sha256_after": "4f08c56fa1de3dc958697e9a5eee18542f1ff1995f0d8ca9caffd03789989bee"
+    }
+  ]
+}
+{
+  "version": "overlay-20250810-1",
+  "gn_args": "is_debug=false is_official_build=false target_os=\"android\" target_cpu=\"arm64\" enable_nacl=false symbol_level=1",
+  "target": "chrome_public_apk",
+  "files": [
+    {
+      "path": "content/browser/renderer_host/render_widget_host_impl.cc",
+      "sha256_after": "542a78de8483a6cf128cf0da73b7b132de191205a6ecf246a594702641eb1cbe"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_android.cc",
+      "sha256_after": "eb40f3f056a3a943b54b3838bc4f74752448a7bbaf1b02e5cd520a4455749681"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_base.cc",
+      "sha256_after": "9959aacf5bc41fa5f930b61508fb771aada3b60c3684d96cc761dbe6ca962873"
+    },
+    {
+      "path": "content/public/common/content_switches.cc",
+      "sha256_after": "cfc5bc706274104047790d657669f86c5705fab83934150721a9d829ea100379"
+    },
+    {
+      "path": "content/public/common/content_switches.h",
+      "sha256_after": "4f08c56fa1de3dc958697e9a5eee18542f1ff1995f0d8ca9caffd03789989bee"
+    }
+  ]
+}
+{
+  "version": "overlay-20250810-1",
+  "gn_args": "is_debug=false is_official_build=false target_os=\"android\" target_cpu=\"arm64\" enable_nacl=false symbol_level=1",
+  "target": "chrome_public_apk",
+  "files": [
+    {
+      "path": "content/browser/renderer_host/render_widget_host_impl.cc",
+      "sha256_after": "542a78de8483a6cf128cf0da73b7b132de191205a6ecf246a594702641eb1cbe"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_android.cc",
+      "sha256_after": "eb40f3f056a3a943b54b3838bc4f74752448a7bbaf1b02e5cd520a4455749681"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_base.cc",
+      "sha256_after": "9959aacf5bc41fa5f930b61508fb771aada3b60c3684d96cc761dbe6ca962873"
+    },
+    {
+      "path": "content/public/common/content_switches.cc",
+      "sha256_after": "cfc5bc706274104047790d657669f86c5705fab83934150721a9d829ea100379"
+    },
+    {
+      "path": "content/public/common/content_switches.h",
+      "sha256_after": "4f08c56fa1de3dc958697e9a5eee18542f1ff1995f0d8ca9caffd03789989bee"
+    }
+  ]
+}
+{
+  "version": "overlay-20250810-1",
+  "gn_args": "is_debug=false is_official_build=false target_os=\"android\" target_cpu=\"arm64\" enable_nacl=false symbol_level=1",
+  "target": "chrome_public_apk",
+  "files": [
+    {
+      "path": "content/browser/renderer_host/render_widget_host_impl.cc",
+      "sha256_after": "542a78de8483a6cf128cf0da73b7b132de191205a6ecf246a594702641eb1cbe"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_android.cc",
+      "sha256_after": "eb40f3f056a3a943b54b3838bc4f74752448a7bbaf1b02e5cd520a4455749681"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_base.cc",
+      "sha256_after": "9959aacf5bc41fa5f930b61508fb771aada3b60c3684d96cc761dbe6ca962873"
+    },
+    {
+      "path": "content/public/common/content_switches.cc",
+      "sha256_after": "cfc5bc706274104047790d657669f86c5705fab83934150721a9d829ea100379"
+    },
+    {
+      "path": "content/public/common/content_switches.h",
+      "sha256_after": "4f08c56fa1de3dc958697e9a5eee18542f1ff1995f0d8ca9caffd03789989bee"
+    }
+  ]
+}
+{
+  "version": "overlay-20250810-1",
+  "gn_args": "is_debug=false is_official_build=false target_os=\"android\" target_cpu=\"arm64\" enable_nacl=false symbol_level=1",
+  "target": "chrome_public_apk",
+  "files": [
+    {
+      "path": "content/browser/renderer_host/render_widget_host_impl.cc",
+      "sha256_after": "542a78de8483a6cf128cf0da73b7b132de191205a6ecf246a594702641eb1cbe"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_android.cc",
+      "sha256_after": "eb40f3f056a3a943b54b3838bc4f74752448a7bbaf1b02e5cd520a4455749681"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_base.cc",
+      "sha256_after": "9959aacf5bc41fa5f930b61508fb771aada3b60c3684d96cc761dbe6ca962873"
+    },
+    {
+      "path": "content/public/common/content_switches.cc",
+      "sha256_after": "cfc5bc706274104047790d657669f86c5705fab83934150721a9d829ea100379"
+    },
+    {
+      "path": "content/public/common/content_switches.h",
+      "sha256_after": "4f08c56fa1de3dc958697e9a5eee18542f1ff1995f0d8ca9caffd03789989bee"
+    }
+  ]
+}
+{
+  "version": "overlay-20250810-1",
+  "gn_args": "is_debug=false is_official_build=false target_os=\"android\" target_cpu=\"arm64\" enable_nacl=false symbol_level=1",
+  "target": "chrome_public_apk",
+  "files": [
+    {
+      "path": "content/browser/renderer_host/render_widget_host_impl.cc",
+      "sha256_after": "542a78de8483a6cf128cf0da73b7b132de191205a6ecf246a594702641eb1cbe"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_android.cc",
+      "sha256_after": "eb40f3f056a3a943b54b3838bc4f74752448a7bbaf1b02e5cd520a4455749681"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_base.cc",
+      "sha256_after": "9959aacf5bc41fa5f930b61508fb771aada3b60c3684d96cc761dbe6ca962873"
+    },
+    {
+      "path": "content/public/common/content_switches.cc",
+      "sha256_after": "cfc5bc706274104047790d657669f86c5705fab83934150721a9d829ea100379"
+    },
+    {
+      "path": "content/public/common/content_switches.h",
+      "sha256_after": "4f08c56fa1de3dc958697e9a5eee18542f1ff1995f0d8ca9caffd03789989bee"
+    }
+  ]
+}
+{
+  "version": "overlay-20250810-1",
+  "gn_args": "is_debug=false is_official_build=false target_os=\"android\" target_cpu=\"arm64\" enable_nacl=false symbol_level=1",
+  "target": "chrome_public_apk",
+  "files": [
+    {
+      "path": "content/browser/renderer_host/render_widget_host_impl.cc",
+      "sha256_after": "542a78de8483a6cf128cf0da73b7b132de191205a6ecf246a594702641eb1cbe"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_android.cc",
+      "sha256_after": "eb40f3f056a3a943b54b3838bc4f74752448a7bbaf1b02e5cd520a4455749681"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_base.cc",
+      "sha256_after": "9959aacf5bc41fa5f930b61508fb771aada3b60c3684d96cc761dbe6ca962873"
+    },
+    {
+      "path": "content/public/common/content_switches.cc",
+      "sha256_after": "cfc5bc706274104047790d657669f86c5705fab83934150721a9d829ea100379"
+    },
+    {
+      "path": "content/public/common/content_switches.h",
+      "sha256_after": "4f08c56fa1de3dc958697e9a5eee18542f1ff1995f0d8ca9caffd03789989bee"
+    }
+  ]
+}
+{
+  "version": "overlay-20250810-1",
+  "gn_args": "is_debug=false is_official_build=false target_os=\"android\" target_cpu=\"arm64\" enable_nacl=false symbol_level=1",
+  "target": "chrome_public_apk",
+  "files": [
+    {
+      "path": "content/browser/renderer_host/render_widget_host_impl.cc",
+      "sha256_after": "542a78de8483a6cf128cf0da73b7b132de191205a6ecf246a594702641eb1cbe"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_android.cc",
+      "sha256_after": "eb40f3f056a3a943b54b3838bc4f74752448a7bbaf1b02e5cd520a4455749681"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_base.cc",
+      "sha256_after": "9959aacf5bc41fa5f930b61508fb771aada3b60c3684d96cc761dbe6ca962873"
+    },
+    {
+      "path": "content/public/common/content_switches.cc",
+      "sha256_after": "cfc5bc706274104047790d657669f86c5705fab83934150721a9d829ea100379"
+    },
+    {
+      "path": "content/public/common/content_switches.h",
+      "sha256_after": "4f08c56fa1de3dc958697e9a5eee18542f1ff1995f0d8ca9caffd03789989bee"
+    }
+  ]
+}
+{
+  "version": "overlay-20250810-1",
+  "gn_args": "is_debug=false is_official_build=false target_os=\"android\" target_cpu=\"arm64\" enable_nacl=false symbol_level=1",
+  "target": "chrome_public_apk",
+  "files": [
+    {
+      "path": "content/browser/renderer_host/render_widget_host_impl.cc",
+      "sha256_after": "542a78de8483a6cf128cf0da73b7b132de191205a6ecf246a594702641eb1cbe"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_android.cc",
+      "sha256_after": "eb40f3f056a3a943b54b3838bc4f74752448a7bbaf1b02e5cd520a4455749681"
+    },
+    {
+      "path": "content/browser/renderer_host/render_widget_host_view_base.cc",
+      "sha256_after": "9959aacf5bc41fa5f930b61508fb771aada3b60c3684d96cc761dbe6ca962873"
+    },
+    {
+      "path": "content/public/common/content_switches.cc",
+      "sha256_after": "cfc5bc706274104047790d657669f86c5705fab83934150721a9d829ea100379"
+    },
+    {
+      "path": "content/public/common/content_switches.h",
+      "sha256_after": "4f08c56fa1de3dc958697e9a5eee18542f1ff1995f0d8ca9caffd03789989bee"
+    }
+  ]
+}
+{
+  "version": "overlay-20250810-1",
+  "gn_args": "is_debug=false is_official_build=false target_os=\"android\" target_cpu=\"arm64\" enable_nacl=false symbol_level=1",
+  "target": "chrome_public_apk",
+  "files": [
+    {
+      "path": "content/browser/renderer_host/render_widget_host_impl.cc",
+      "sha256_after": "542a78de8483a6cf128cf0da73b7b132de191205a6ecf246a594702641eb1cbe"
+    },
+    {
+      "path": "content/browser/renderer

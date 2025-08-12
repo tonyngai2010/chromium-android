@@ -1267,7 +1267,7 @@ gfx::Size RenderWidgetHostViewAndroid::GetRequestedRendererSizeDevicePx() {
       return gfx::Size();
     }
 
-    const float scale_factor = GetDeviceScaleFactor();
+    const float scale_factor = view_.GetDipScale();
     return gfx::Size(default_bounds_dip_.width() * scale_factor,
                      default_bounds_dip_.height() * scale_factor);
   }
@@ -1303,7 +1303,7 @@ gfx::Size RenderWidgetHostViewAndroid::GetCompositorViewportPixelSize() {
       return gfx::Size();
     }
 
-    const float scale_factor = GetDeviceScaleFactor();
+    const float scale_factor = view_.GetDipScale();
     return gfx::Size(default_bounds_dip_.right() * scale_factor,
                      default_bounds_dip_.bottom() * scale_factor);
   }

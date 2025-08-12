@@ -5,12 +5,11 @@
 #include "content/public/common/content_switches.h"
 
 #include "build/build_config.h"
-#include "content/public/common/buildflags.h"
-#include "media/media_buildflags.h"
 
 namespace switches {
 
-const char kSpoofResolution[] = "spoof-resolution";
+// All switches in alphabetical order. The switches should be documented
+// alongside the definition of their values in the .cc file.
 
 // By default, file:// URIs cannot read other file:// URIs. This is an
 // override for developers who need the old behavior for testing.
@@ -997,3 +996,8 @@ const char kIpcFuzzerTestcase[] = "ipc-fuzzer-testcase";
 // Don't dump stuff here, follow the same order as the header.
 
 }  // namespace switches
+// Spoof screen resolution and device pixel ratio for JavaScript APIs only.
+// Format: WIDTHxHEIGHT@DPR (e.g., 375x812@3.0)
+// This affects screen.width/height, window.devicePixelRatio, etc. but keeps
+// actual rendering at native resolution for optimal visual quality.
+const char kSpoofResolution[] = "spoof-resolution";
