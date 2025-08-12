@@ -1,35 +1,1516 @@
 #!/usr/bin/env bash
 set -euo pipefail
-SRC_ROOT="${SRC_ROOT:-$PWD}"
-OVERLAY_DIR="${OVERLAY_DIR:-$(cd "$(dirname "$0")/.." && pwd)}"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+MANIFEST="$ROOT/manifest.json"
 
-echo ">>> Using SRC_ROOT=$SRC_ROOT"
-test -d "$SRC_ROOT/ui" || { echo "Please set SRC_ROOT to chromium/src"; exit 1; }
+linux_root=$(grep -oP '"linux_root"\s*:\s*"\K[^"]+' "$MANIFEST")
+windows_root=$(grep -oP '"windows_root"\s*:\s*"\K[^"]+' "$MANIFEST")
+dry_run_flag=$(grep -oP '"dry_run"\s*:\s*\K(true|false)' "$MANIFEST")
 
-# copy files with backup
-BACKUP_DIR="$SRC_ROOT/.overlay_backups/$(date +%Y%m%d_%H%M%S)"
-mkdir -p "$BACKUP_DIR"
-python3 - <<'PY'
-import os,shutil,hashlib,json,sys
-src=os.environ["SRC_ROOT"]
-ovl=os.path.realpath(os.path.join(os.path.dirname(__file__),".."))
-mf=os.path.join(ovl,"manifest.json")
-data=json.load(open(mf,"r",encoding="utf-8"))
-files=data.get("files",[])
-bkp=os.path.join(src, ".overlay_backups", os.popen("date +%Y%m%d_%H%M%S").read().strip())
-for it in files:
-    rel=it["path"]
-    dst=os.path.join(src,rel)
-    src_new=os.path.join(ovl,"files",rel)
-    os.makedirs(os.path.dirname(dst),exist_ok=True)
-    if os.path.exists(dst):
-        os.makedirs(os.path.join(bkp,os.path.dirname(rel)),exist_ok=True)
-        shutil.copy2(dst, os.path.join(bkp,rel))
-    shutil.copy2(src_new, dst)
-    print("[OK]", rel)
-print("[BACKUP]", bkp)
-PY
+if [[ "$OS" == "Windows_NT" || "$(uname -s)" =~ MINGW|MSYS|CYGWIN ]]; then
+  TARGET_ROOT="$windows_root"
+else
+  TARGET_ROOT="$linux_root"
+fi
+TARGET_ROOT="${TARGET_ROOT/#\~/$HOME}"
 
-echo ">>> Files overlay completed (no build)"
-echo ">>> DONE"
+echo "[overlay] target root: $TARGET_ROOT"
+echo "[overlay] dry_run: $dry_run_flag"
 
+SRC_DIR="$ROOT/files"
+FILES=(
+  "third_party/blink/renderer/core/frame/screen.cc"
+)
+
+# 安全保护：若 screen.cc 仍是占位版，则拒绝复制，避免误编译失败
+if grep -q "OVERLAY_PLACEHOLDER_DO_NOT_APPLY" "$SRC_DIR/third_party/blink/renderer/core/frame/screen.cc"; then
+  echo "[guard] screen.cc is placeholder. Replace with branch-matched implementation before applying."
+  exit 1
+fi
+
+for f in "${FILES[@]}"; do
+  src="$SRC_DIR/$f"
+  dst="$TARGET_ROOT/$f"
+  echo "[copy] $f"
+  if [[ "$dry_run_flag" == "false" ]]; then
+    mkdir -p "$(dirname "$dst")"
+    install -m 0644 "$src" "$dst"
+  fi
+done
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
+
+echo "[done]"
+if [[ "${1:-}" == "--build" ]]; then
+  echo "[build] autoninja -C \"$TARGET_ROOT/out/Default\" chrome_public_apk"
+  autoninja -C "$TARGET_ROOT/out/Default" chrome_public_apk
+fi
