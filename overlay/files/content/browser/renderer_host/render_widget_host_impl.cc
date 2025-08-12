@@ -1336,19 +1336,11 @@ bool RenderWidgetHostImpl::SynchronizeVisualProperties(
   static SpoofParams sp = ParseSpoofParams();
   if (sp.enabled) {
     const float dpr = sp.dpr;
-    const int css_w = static_cast<int>(sp.w / dpr);
-    const int css_h = static_cast<int>(sp.h / dpr);
-
-    // 覆写关键字段 - 这些是必需的！
-    visual_properties->new_size_device_px = gfx::Size(sp.w, sp.h);
-    visual_properties->compositor_viewport_pixel_rect = gfx::Rect(0, 0, sp.w, sp.h);
-    visual_properties->visible_viewport_size_device_px = gfx::Size(sp.w, sp.h);
-
-    // 更新 screen_info 中的 DPR
+    
+    // ✅ 只伪装 screen_info - 这些是JavaScript可访问的API
     auto& current_screen_info = visual_properties->screen_infos.mutable_current();
     current_screen_info.device_scale_factor = dpr;
-
-    // 伪装屏幕尺寸信息
+    
     const int inset_px = std::max(0, static_cast<int>(24 * dpr));
     const int avail_h = std::max(0, sp.h - inset_px);
     current_screen_info.rect = gfx::Rect(0, 0, sp.w, sp.h);
@@ -1361,9 +1353,8 @@ bool RenderWidgetHostImpl::SynchronizeVisualProperties(
       screen_info.available_rect = gfx::Rect(0, inset_px, sp.w, avail_h);
     }
 
-    LOG(INFO) << "[视口伪装] 设备像素: " << sp.w << "x" << sp.h
-              << ", CSS尺寸: " << css_w << "x" << css_h
-              << ", DPR: " << dpr;
+    LOG(INFO) << "[API伪装] screen API已伪装为 " << sp.w << "x" << sp.h << "@" << dpr
+              << "，实际渲染保持真机尺寸";
   }
 
   if (!StoredVisualPropertiesNeedsUpdate(old_visual_properties_,

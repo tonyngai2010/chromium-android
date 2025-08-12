@@ -878,6 +878,29 @@ display::ScreenInfos RenderWidgetHostViewBase::GetNewScreenInfosForUpdate() {
   // display.
   screen_infos.system_cursor_size = system_cursor_size_;
 
+  // ===== SPOOF-RES: 伪装 ScreenInfos =====
+  static SpoofParams sp = ParseSpoofParams();
+  if (sp.enabled) {
+    const int inset_px = static_cast<int>(24 * sp.dpr);
+    const int avail_h = sp.h - inset_px;
+    
+    // 伪装当前屏幕信息
+    auto& current = screen_infos.mutable_current();
+    current.device_scale_factor = sp.dpr;
+    current.rect = gfx::Rect(0, 0, sp.w, sp.h);
+    current.available_rect = gfx::Rect(0, inset_px, sp.w, avail_h);
+    
+    // 伪装所有屏幕信息
+    for (auto& screen_info : screen_infos.screen_infos) {
+      screen_info.device_scale_factor = sp.dpr;
+      screen_info.rect = gfx::Rect(0, 0, sp.w, sp.h);
+      screen_info.available_rect = gfx::Rect(0, inset_px, sp.w, avail_h);
+    }
+    
+    LOG(INFO) << "[Base层伪装] ScreenInfos已伪装为 " << sp.w << "x" << sp.h << "@" << sp.dpr;
+  }
+  // ===== SPOOF-RES END =====
+
   return screen_infos;
 }
 
