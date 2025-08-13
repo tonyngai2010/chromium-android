@@ -28,6 +28,8 @@
 
 #include "third_party/blink/renderer/core/frame/screen.h"
 
+#include <algorithm>
+
 #include "base/numerics/safe_conversions.h"
 #include "services/network/public/mojom/permissions_policy/permissions_policy_feature.mojom-blink.h"
 #include "third_party/blink/renderer/core/event_target_names.h"
