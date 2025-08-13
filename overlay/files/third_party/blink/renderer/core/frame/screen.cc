@@ -1,52 +1,22 @@
-/*
- * Copyright (C) 2007 Apple Inc.  All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1.  Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- * 2.  Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in the
- *     documentation and/or other materials provided with the distribution.
- * 3.  Neither the name of Apple Computer, Inc. ("Apple") nor the names of
- *     its contributors may be used to endorse or promote products derived
- *     from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+// overlay/files/third_party/blink/renderer/core/frame/screen.cc
 
 #include "third_party/blink/renderer/core/frame/screen.h"
 
-#include <algorithm>
-
 #include "base/numerics/safe_conversions.h"
 #include "services/network/public/mojom/permissions_policy/permissions_policy_feature.mojom-blink.h"
+#include "third_party/blink/renderer/core/dom/cached_permission_status.h"
 #include "third_party/blink/renderer/core/event_target_names.h"
 #include "third_party/blink/renderer/core/frame/local_dom_window.h"
 #include "third_party/blink/renderer/core/frame/local_frame.h"
 #include "third_party/blink/renderer/core/frame/settings.h"
 #include "third_party/blink/renderer/core/page/chrome_client.h"
+#include "third_party/blink/renderer/platform/runtime_enabled_features.h"
 #include "ui/display/screen_info.h"
 #include "ui/display/screen_infos.h"
 
 namespace blink {
 
-// ====== 重要说明 ======
-// 本覆写版仅伪装 web 暴露的 screen 信息，
-// 不改动底层显示/布局逻辑，不影响设备真实渲染区域。
-// =====================
-
+// —— 仅伪装 Web 暴露的 screen 信息；不改动真实渲染与系统显示 —— //
 namespace {
 constexpr int kSpoofedWidth = 888;
 constexpr int kSpoofedHeight = 888;
@@ -67,11 +37,10 @@ Screen::Screen(LocalDOMWindow* window, int64_t display_id)
   }
 }
 
-// static
+// 保留：仅用于判断“真实屏幕信息是否变化”，与伪装无冲突。
 bool Screen::AreWebExposedScreenPropertiesEqual(
     const display::ScreenInfo& prev,
     const display::ScreenInfo& current) {
-  // 下方保持原逻辑，不影响伪装（我们不再依赖这些真实值）
   if (prev.rect.size() != current.rect.size())
     return false;
   if (prev.device_scale_factor != current.device_scale_factor)
@@ -85,23 +54,40 @@ bool Screen::AreWebExposedScreenPropertiesEqual(
   return true;
 }
 
-// ====== Web 可见属性：全部写死 ======
-
-int Screen::height() const { return kSpoofedHeight; }
+// ========== Web 暴露属性：写死 ==========
 int Screen::width() const { return kSpoofedWidth; }
+int Screen::height() const { return kSpoofedHeight; }
+int Screen::availWidth() const { return kSpoofedWidth; }
+int Screen::availHeight() const { return kSpoofedHeight; }
+int Screen::availLeft() const { return 0; }
+int Screen::availTop() const { return 0; }
 unsigned Screen::colorDepth() const { return kSpoofedColorDepth; }
 unsigned Screen::pixelDepth() const { return kSpoofedColorDepth; }
 
-int Screen::availHeight() const { return kSpoofedHeight; }
-int Screen::availWidth() const { return kSpoofedWidth; }
+// ========== 内部方法：保留，但在 GetRect 上做“对外伪装” ==========
+// 说明：不少检测站点显示的“屏幕分辨率”其实来自 Screen::GetRect(false)
+// 或其绑定层生成代码的读取结果。因此这里直接返回伪装矩形，
+// 以确保所有路径都拿到 888x888。
+// 这不会影响页面布局与渲染（它们走的是视口尺寸）。
+gfx::Rect Screen::GetRect(bool /*available*/) const {
+  // 统一对外伪装：返回固定矩形 (0,0,888,888)
+  return gfx::Rect(0, 0, kSpoofedWidth, kSpoofedHeight);
+}
 
-// 这两个方法是 V8 绑定会强制调用的，如果不实现会导致链接报
-// undefined symbol（你之前的链接错误即由此产生）。
-int Screen::availLeft() const { return 0; }
-int Screen::availTop() const { return 0; }
+// 保留：真实 ScreenInfo 仍可供其它非 Web 暴露逻辑使用
+const display::ScreenInfo& Screen::GetScreenInfo() const {
+  DCHECK(DomWindow());
+  LocalFrame* frame = DomWindow()->GetFrame();
+  const auto& screen_infos = frame->GetChromeClient().GetScreenInfos(*frame);
+  for (const auto& screen : screen_infos.screen_infos) {
+    if (screen.display_id == display_id_)
+      return screen;
+  }
+  DEFINE_STATIC_LOCAL(display::ScreenInfo, kEmptyScreenInfo, ());
+  return kEmptyScreenInfo;
+}
 
-// ====== 其余与生命周期/权限/追踪相关的方法保持原样 ======
-
+// 其它保持原样
 void Screen::Trace(Visitor* visitor) const {
   EventTarget::Trace(visitor);
   ExecutionContextClient::Trace(visitor);
@@ -129,34 +115,8 @@ bool Screen::isExtended() const {
           network::mojom::PermissionsPolicyFeature::kWindowManagement)) {
     return false;
   }
-  // 这里返回真实 is_extended，不会影响分辨率伪装
+  // 按真实值返回是否“扩展屏”；与分辨率伪装无关
   return GetScreenInfo().is_extended;
-}
-
-// 注意：GetRect / GetScreenInfo 依旧保留，用于内部逻辑；
-// 但 web 暴露的属性已被上面方法写死，不会再使用这些真实值。
-gfx::Rect Screen::GetRect(bool available) const {
-  if (!DomWindow())
-    return gfx::Rect();
-  LocalFrame* frame = DomWindow()->GetFrame();
-  const display::ScreenInfo& screen_info = GetScreenInfo();
-  gfx::Rect rect = available ? screen_info.available_rect : screen_info.rect;
-  if (frame->GetSettings()->GetReportScreenSizeInPhysicalPixelsQuirk())
-    return gfx::ScaleToRoundedRect(rect, screen_info.device_scale_factor);
-  return rect;
-}
-
-const display::ScreenInfo& Screen::GetScreenInfo() const {
-  DCHECK(DomWindow());
-  LocalFrame* frame = DomWindow()->GetFrame();
-
-  const auto& screen_infos = frame->GetChromeClient().GetScreenInfos(*frame);
-  for (const auto& screen : screen_infos.screen_infos) {
-    if (screen.display_id == display_id_)
-      return screen;
-  }
-  DEFINE_STATIC_LOCAL(display::ScreenInfo, kEmptyScreenInfo, ());
-  return kEmptyScreenInfo;
 }
 
 void Screen::OnPermissionStatusChange(mojom::blink::PermissionName name,
