@@ -96,88 +96,27 @@ bool Screen::AreWebExposedScreenPropertiesEqual(
 }
 
 int Screen::height() const {
-  if (!DomWindow())
-    return 0;
-
-  if (ShouldReduceScreenSize()) {
-    return DomWindow()->innerHeight();
-  }
-
-  return GetRect(/*available=*/false).height();
+  return 1776;  // spoofed
 }
 
 int Screen::width() const {
-  if (!DomWindow())
-    return 0;
-
-  if (ShouldReduceScreenSize()) {
-    return DomWindow()->innerWidth();
-  }
-
-  return GetRect(/*available=*/false).width();
+  return 1776;  // spoofed
 }
 
 unsigned Screen::colorDepth() const {
-  // "If the user agent does not know the color depth or does not want to
-  // return it for privacy considerations, it should return 24."
-  //
-  // https://drafts.csswg.org/cssom-view/#dom-screen-colordepth
-  unsigned unknown_color_depth = 24u;
-
-  if (!DomWindow() || ShouldReduceScreenSize()) {
-    return unknown_color_depth;
-  }
-  return GetScreenInfo().depth == 0
-             ? unknown_color_depth
-             : base::saturated_cast<unsigned>(GetScreenInfo().depth);
+  return 24u;  // spoofed
 }
 
 unsigned Screen::pixelDepth() const {
-  return colorDepth();
-}
-
-int Screen::availLeft() const {
-  if (!DomWindow())
-    return 0;
-
-  if (ShouldReduceScreenSize()) {
-    return 0;
-  }
-
-  return GetRect(/*available=*/true).x();
-}
-
-int Screen::availTop() const {
-  if (!DomWindow())
-    return 0;
-
-  if (ShouldReduceScreenSize()) {
-    return 0;
-  }
-
-  return GetRect(/*available=*/true).y();
+  return 24u;  // spoofed
 }
 
 int Screen::availHeight() const {
-  if (!DomWindow())
-    return 0;
-
-  if (ShouldReduceScreenSize()) {
-    return DomWindow()->innerHeight();
-  }
-
-  return GetRect(/*available=*/true).height();
+  return 840;  // spoofed
 }
 
 int Screen::availWidth() const {
-  if (!DomWindow())
-    return 0;
-
-  if (ShouldReduceScreenSize()) {
-    return DomWindow()->innerWidth();
-  }
-
-  return GetRect(/*available=*/true).width();
+  return 888;  // spoofed
 }
 
 void Screen::Trace(Visitor* visitor) const {
