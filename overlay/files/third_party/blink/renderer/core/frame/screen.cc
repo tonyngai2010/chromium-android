@@ -40,14 +40,19 @@
 
 namespace blink {
 
+// ====== 重要说明 ======
+// 本覆写版仅伪装 web 暴露的 screen 信息，
+// 不改动底层显示/布局逻辑，不影响设备真实渲染区域。
+// =====================
+
+namespace {
+constexpr int kSpoofedWidth = 888;
+constexpr int kSpoofedHeight = 888;
+constexpr unsigned kSpoofedColorDepth = 24u;
+}  // namespace
+
 Screen::Screen(LocalDOMWindow* window, int64_t display_id)
     : ExecutionContextClient(window), display_id_(display_id) {
-  // If we're potentially reducing information about the screen size, register
-  // ourselves as a client of CachedPermissionStatus to listen for changes to
-  // the WINDOW_MANAGEMENT permission. We're going to rely on this cache because
-  // we'd otherwise need to block each synchronous property getter on a call to
-  // retrieve the current permission status, which is quite expensive for this
-  // commonly-used object.
   if (RuntimeEnabledFeatures::ReduceScreenSizeEnabled() && DomWindow() &&
       DomWindow()->IsFeatureEnabled(
           network::mojom::PermissionsPolicyFeature::kWindowManagement)) {
@@ -64,60 +69,36 @@ Screen::Screen(LocalDOMWindow* window, int64_t display_id)
 bool Screen::AreWebExposedScreenPropertiesEqual(
     const display::ScreenInfo& prev,
     const display::ScreenInfo& current) {
-  // height() and width() use rect.size()
-  if (prev.rect.size() != current.rect.size()) {
+  // 下方保持原逻辑，不影响伪装（我们不再依赖这些真实值）
+  if (prev.rect.size() != current.rect.size())
     return false;
-  }
-
-  // height() and width() use device_scale_factor
-  // Note: comparing device_scale_factor is a bit of a lie as Screen only uses
-  // this with the PhysicalPixelsQuirk (see width() / height() below).  However,
-  // this value likely changes rarely and should not throw many false positives.
-  if (prev.device_scale_factor != current.device_scale_factor) {
+  if (prev.device_scale_factor != current.device_scale_factor)
     return false;
-  }
-
-  // avail[Left|Top|Width|Height]() use available_rect
-  if (prev.available_rect != current.available_rect) {
+  if (prev.available_rect != current.available_rect)
     return false;
-  }
-
-  // colorDepth() and pixelDepth() use depth
-  if (prev.depth != current.depth) {
+  if (prev.depth != current.depth)
     return false;
-  }
-
-  // isExtended()
-  if (prev.is_extended != current.is_extended) {
+  if (prev.is_extended != current.is_extended)
     return false;
-  }
-
   return true;
 }
 
-int Screen::height() const {
-  return 1776;  // spoofed
-}
+// ====== Web 可见属性：全部写死 ======
 
-int Screen::width() const {
-  return 1776;  // spoofed
-}
+int Screen::height() const { return kSpoofedHeight; }
+int Screen::width() const { return kSpoofedWidth; }
+unsigned Screen::colorDepth() const { return kSpoofedColorDepth; }
+unsigned Screen::pixelDepth() const { return kSpoofedColorDepth; }
 
-unsigned Screen::colorDepth() const {
-  return 24u;  // spoofed
-}
+int Screen::availHeight() const { return kSpoofedHeight; }
+int Screen::availWidth() const { return kSpoofedWidth; }
 
-unsigned Screen::pixelDepth() const {
-  return 24u;  // spoofed
-}
+// 这两个方法是 V8 绑定会强制调用的，如果不实现会导致链接报
+// undefined symbol（你之前的链接错误即由此产生）。
+int Screen::availLeft() const { return 0; }
+int Screen::availTop() const { return 0; }
 
-int Screen::availHeight() const {
-  return 840;  // spoofed
-}
-
-int Screen::availWidth() const {
-  return 888;  // spoofed
-}
+// ====== 其余与生命周期/权限/追踪相关的方法保持原样 ======
 
 void Screen::Trace(Visitor* visitor) const {
   EventTarget::Trace(visitor);
@@ -134,25 +115,24 @@ ExecutionContext* Screen::GetExecutionContext() const {
 }
 
 bool Screen::ShouldReduceScreenSize() const {
-  // TODO(408932088): Take the current state of the window management permission
-  // (`mojom::blink::PermissionName::WINDOW_MANAGEMENT`) into account here.
   return RuntimeEnabledFeatures::ReduceScreenSizeEnabled() &&
          !window_management_permission_granted_;
 }
 
 bool Screen::isExtended() const {
-  if (!DomWindow() || ShouldReduceScreenSize()) {
+  if (!DomWindow() || ShouldReduceScreenSize())
     return false;
-  }
   auto* context = GetExecutionContext();
   if (!context->IsFeatureEnabled(
           network::mojom::PermissionsPolicyFeature::kWindowManagement)) {
     return false;
   }
-
+  // 这里返回真实 is_extended，不会影响分辨率伪装
   return GetScreenInfo().is_extended;
 }
 
+// 注意：GetRect / GetScreenInfo 依旧保留，用于内部逻辑；
+// 但 web 暴露的属性已被上面方法写死，不会再使用这些真实值。
 gfx::Rect Screen::GetRect(bool available) const {
   if (!DomWindow())
     return gfx::Rect();
@@ -186,14 +166,10 @@ void Screen::OnPermissionStatusChange(mojom::blink::PermissionName name,
 
 void Screen::OnPermissionStatusInitialized(
     CachedPermissionStatus::PermissionStatusMap map) {
-  // Window management permission is granted if the map we're given has entries,
-  // and they're all GRANTED:
   window_management_permission_granted_ =
       map.size() > 0U && std::ranges::all_of(map, [](const auto& status) {
         return status.value == mojom::blink::PermissionStatus::GRANTED;
       });
-
-  // If the permission is granted, it should be the only item in the map:
   CHECK(!window_management_permission_granted_ || map.size() == 1U);
 }
 
