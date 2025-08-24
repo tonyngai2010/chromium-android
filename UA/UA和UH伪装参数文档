@@ -1,0 +1,278 @@
+doc_meta:
+  title: "Chromium 全局 UA / UA-CH 伪装开发文档"
+  version: "1.0.0"
+  last_updated: "2025-08-24"
+  audience: ["嵌入式团队", "浏览器内核团队", "反爬与指纹研究"]
+  owners:
+    - name: "负责工程师A"
+      team: "Core/Networking"
+    - name: "代码审核B"
+      team: "Blink/Platform"
+  chromium_target: "Chromium main（桌面/Android）"
+  summary: >
+    通过在统一入口生成并返回伪装后的 UA 与 UA-CH，使网络层（请求头）和 JS 层
+    （navigator.userAgent / navigator.userAgentData）一致展示“伪装”值；支持
+    编译期固定、运行时开关与 CDP 对照验证。
+
+goals:
+  - 全局统一伪装 UA 与 UA-CH，避免层级不一致
+  - 尽量保持与现网生态兼容（保留/模拟 GREASE）
+  - 支持灰度/回滚，附最小变更路径
+non_goals:
+  - 非 Chromium 家族（如 iOS WebKit）的实现
+  - 站点级/导航级临时覆盖策略（可用 CDP 做对照）
+
+scope:
+  components:
+    - path: "components/embedder_support/user_agent_utils.cc/.h"
+      role: "统一入口：生成 UA 字符串与 UserAgentMetadata（最重要）"
+    - path: "content/common/user_agent.cc"
+      role: "底层 UA 拼接与平台细节（macOS 封顶、Android 机型、WOW64 等）"
+    - path: "components/version_info/version_info.cc"
+      role: "产品名/版本号（影响 UA 与 UA-CH 的版本）"
+    - path: "third_party/blink/public/common/user_agent/user_agent_metadata.h"
+      role: "UA-CH 结构体定义与字段说明（JS 层读取依据）"
+    - path: "third_party/blink/renderer/core/frame/navigator_ua.cc"
+      role: "JS 暴露层，读取 UserAgentMetadata 提供 userAgentData"
+  exposure_mapping:
+    - field: "UA string"
+      headers: ["User-Agent"]
+      js: ["navigator.userAgent"]
+    - field: "brand_version_list"
+      headers: ["Sec-CH-UA"]
+      js: ["navigator.userAgentData.brands"]
+    - field: "brand_full_version_list / full_version"
+      headers: ["Sec-CH-UA-Full-Version-List"]
+      js: ["getHighEntropyValues(['fullVersionList'])"]
+    - field: "platform / platform_version"
+      headers: ["Sec-CH-UA-Platform", "Sec-CH-UA-Platform-Version"]
+      js: ["navigator.userAgentData.platform", "getHighEntropyValues([...])"]
+    - field: "architecture / bitness / model / mobile / form_factors / wow64"
+      headers: ["Sec-CH-UA-Arch", "Sec-CH-UA-Bitness", "Sec-CH-UA-Model"]
+      js: ["getHighEntropyValues([...])"]
+
+implementation:
+  strategy:
+    compile_time:
+      description: "在 user_agent_utils.* 返回固定伪装值；最小改动、影响面广"
+      pros: ["一处改动全局生效", "易于审计与回滚"]
+      cons: ["需要发版", "不灵活"]
+    runtime_flag:
+      description: "读取 Pref/命令行/远端开关以启停伪装"
+      pros: ["可灰度/动态控制"]
+      cons: ["需增加配置与安全校验"]
+    cdp_overlay_for_ab:
+      description: "DevTools Protocol 覆盖（用于对照/实验）"
+      pros: ["无需改码即可验证组合"]
+      cons: ["非产品级方案，易被网页检测"]
+  change_list_minimal:
+    - file: "components/embedder_support/user_agent_utils.cc/.h"
+      reason: "统一输出 UA 与 UA-CH 的中心点"
+    - file: "components/version_info/version_info.cc"
+      reason: "同步产品名与版本，防止 UA/UA-CH 不一致"
+    - file: "content/common/user_agent.cc"
+      reason: "如需修改平台细节（mac 封顶、Android 机型、WOW64 等）"
+  example_patches:
+    ua_and_uach_override_user_agent_utils_cc: |-
+      --- a/components/embedder_support/user_agent_utils.cc
+      +++ b/components/embedder_support/user_agent_utils.cc
+      @@
+       std::string GetUserAgent(UserAgentReductionEnterprisePolicyState policy) {
+      -  return /* existing */ BuildUnifiedPlatformUserAgentFromProduct(
+      -      GetProductAndVersion(policy));
+      +  // 全局伪装 UA（示例：Windows 桌面 Chrome 120）
+      +  return "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+      +         "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
+       }
+       blink::UserAgentMetadata GetUserAgentMetadata(bool only_low_entropy_ch) {
+      -  blink::UserAgentMetadata meta = /* existing default */;
+      +  blink::UserAgentMetadata meta;
+      +  // 品牌（含 GREASE 示例）
+      +  meta.brand_version_list = {
+      +      {"Not A;Brand", "99"},
+      +      {"Chromium", "120"},
+      +      {"MyChrome", "120"}};
+      +  meta.brand_full_version_list = {
+      +      {"Chromium", "120.0.0.0"},
+      +      {"MyChrome", "120.0.0.0"}};
+      +  meta.full_version = "120.0.0.0";
+      +  // 平台/架构/位数/机型/是否移动/表单因子
+      +  meta.platform = "Windows";
+      +  meta.platform_version = "10.0.0";
+      +  meta.architecture = "x86";
+      +  meta.bitness = "64";
+      +  meta.model = "";
+      +  meta.mobile = false;
+      +  meta.wow64 = false;
+      +  meta.form_factors = {blink::kDesktopFormFactor};
+         return meta;
+       }
+    version_info_product_name_cc: |-
+      --- a/components/version_info/version_info.cc
+      +++ b/components/version_info/version_info.cc
+      @@
+       std::string GetProductNameAndVersionForUserAgent() {
+      -  return "Chrome/" + GetVersionNumber();
+      +  return "MyChrome/" + GetVersionNumber();
+       }
+  pseudocode_requirements:
+    - "GetUserAgent() 与 GetUserAgentMetadata() 必须成对修改，字段一一对应"
+    - "如更改平台/版本等信息，确保 content/common/user_agent.cc 中平台片段一致"
+    - "保留/模拟 GREASE，避免被顺序/命名启发式识别"
+    - "考虑企业策略 UA Reduction：要么遵循策略、要么显式覆盖并注释原因"
+
+profiles:
+  default_spoof_profile:
+    description: "桌面 Windows x64 示例（可直接使用）"
+    ua_string: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    user_agent_metadata:
+      brand_version_list:
+        - { brand: "Not A;Brand", version: "99" }
+        - { brand: "Chromium", version: "120" }
+        - { brand: "MyChrome", version: "120" }
+      brand_full_version_list:
+        - { brand: "Chromium", version: "120.0.0.0" }
+        - { brand: "MyChrome", version: "120.0.0.0" }
+      full_version: "120.0.0.0"
+      platform: "Windows"
+      platform_version: "10.0.0"
+      architecture: "x86"
+      bitness: "64"
+      model: ""
+      mobile: false
+      wow64: false
+      form_factors: ["desktop"]
+  examples:
+    - name: "Android 13 / Pixel"
+      ua_string: "Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36"
+      hints_delta:
+        mobile: true
+        model: "Pixel 7"
+        platform: "Android"
+        platform_version: "13"
+        form_factors: ["handheld"]
+    - name: "macOS 10.15.7"
+      note: "Chromium 默认会封顶显示为 10_15_7；如要更高版本需同步改 content/common/user_agent.cc"
+      ua_string: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+
+build_and_run:
+  gn_args: "is_debug=true is_component_build=true"
+  commands:
+    - "gn gen out/ua-spoof --args='is_debug=true is_component_build=true'"
+    - "ninja -C out/ua-spoof chrome"
+  runtime_flags:
+    - flag: "--user-agent=\"...\""
+      note: "仅覆盖 UA 字符串，不会自动覆盖 UA-CH（仅用于对照）"
+
+validation:
+  browser_console:
+    - cmd: "navigator.userAgent"
+      expect: "与 profiles.ua_string 一致"
+    - cmd: "navigator.userAgentData.brands"
+      expect: "包含自定义品牌与主版本"
+    - cmd: "await navigator.userAgentData.getHighEntropyValues(['platform','platformVersion','architecture','bitness','model','fullVersionList'])"
+      expect: "返回值与伪装字段一致"
+  network_headers_expect:
+    - "User-Agent"
+    - "Sec-CH-UA"
+    - "Sec-CH-UA-Full-Version-List"
+    - "Sec-CH-UA-Platform"
+    - "Sec-CH-UA-Platform-Version"
+    - "Sec-CH-UA-Arch"
+    - "Sec-CH-UA-Bitness"
+    - "Sec-CH-UA-Model"
+  cdp_reference:
+    description: "用于 A/B 对照，不用于最终产品逻辑"
+    method: "Network.setUserAgentOverride"
+    params_example: |-
+      {
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "userAgentMetadata": {
+          "brands": [
+            { "brand": "Not A;Brand", "version": "99" },
+            { "brand": "Chromium", "version": "120" },
+            { "brand": "MyChrome", "version": "120" }
+          ],
+          "fullVersionList": [
+            { "brand": "Chromium", "version": "120.0.0.0" },
+            { "brand": "MyChrome", "version": "120.0.0.0" }
+          ],
+          "fullVersion": "120.0.0.0",
+          "platform": "Windows",
+          "platformVersion": "10.0.0",
+          "architecture": "x86",
+          "bitness": "64",
+          "model": "",
+          "mobile": false
+        }
+      }
+
+testing:
+  unit_tests_to_update:
+    - "components/embedder_support/user_agent_utils_unittest.cc"
+    - "（可添加）网络层头字段序列化测试"
+  manual_checklist:
+    - "chrome://version 页面包含伪装后的 Product 与 UA"
+    - "随机访问 HTTPS 站点，Network 面板出现预期 UA-CH 头"
+    - "在 HTTP 站点上验证 UA-CH 行为（可能受政策/权限影响）"
+    - "比较运行时 --user-agent 与编译期伪装的一致性与差异"
+  acceptance_criteria:
+    - "所有渲染进程与子资源请求均携带一致的 UA 与 UA-CH"
+    - "JS 读取与请求头一致，无冲突或空缺字段"
+    - "覆盖 GREASE 后第三方解析正常（无异常报错）"
+
+risks_and_mitigations:
+  - risk: "只改 UA 未改 UA-CH，导致穿帮"
+    mitigation: "强制在同一函数对 UA 与 UA-CH 同步赋值；加单测"
+  - risk: "去掉 GREASE 导致可被特征化"
+    mitigation: "保留或模拟 GREASE；定期变换顺序/值"
+  - risk: "平台细节不一致（macOS 封顶、Android 机型、WOW64）"
+    mitigation: "同步调整 content/common/user_agent.cc 逻辑或对齐 UA-CH"
+  - risk: "UA Reduction/企业策略冲突"
+    mitigation: "遵循策略接口或显式覆盖并加注释与开关"
+  - risk: "站点对 UA-CH 权限/HTTPS 要求导致字段缺失"
+    mitigation: "在验证清单中分别覆盖 HTTP/HTTPS 与权限场景"
+
+rollout_and_flags:
+  feature_flag:
+    name: "UseSpoofedUA"
+    location: "embedder_support/user_agent_utils.cc"
+    storage: "Local State / Finch / 企业策略三选一"
+  staged_rollout:
+    phases:
+      - "内部 Canary → 开发环境灰度（5%）→ 预生产（25%）→ 全量"
+    metrics:
+      - "站点兼容性/崩溃率/请求失败率/解析错误反馈"
+  logging:
+    - "在 NetLog 打印 UA/UA-CH 来源（compile/runtime/cdp）与版本哈希（不含敏感值）"
+
+rollback_plan:
+  steps:
+    - "关闭 UseSpoofedUA 开关或回退 Finch 配置"
+    - "如属于编译期变更，回滚到上一个稳定构建"
+    - "恢复单测基线并比对差异"
+  verification:
+    - "确认 UA 与 UA-CH 恢复默认、站点行为正常"
+
+security_and_compliance:
+  notes:
+    - "避免持久化存储真实与伪装值的映射（降低关联风险）"
+    - "开关与远端配置需权限校验与签名"
+    - "遵守站点隐私政策与地区合规要求"
+
+appendix:
+  key_structs_and_functions:
+    - "embedder_support::GetUserAgent()"
+    - "embedder_support::GetUserAgentMetadata()"
+    - "version_info::GetProductNameAndVersionForUserAgent()"
+    - "content::BuildUserAgentFromOSAndProduct() / BuildOSCpuInfo*()"
+    - "blink::UserAgentMetadata / UserAgentBrandVersion"
+  notes:
+    - "iOS 上 Chrome 使用 WebKit，非本方案适用范围"
+    - "命令行 --user-agent 仅影响 UA 字符串，不会自动覆盖 UA-CH"
+
+change_log:
+  - date: "2025-08-24"
+    author: "tonyngai / Core"
+    changes:
+      - "初版：最小改动方案、示例补丁、验证与回滚流程、风险清单"

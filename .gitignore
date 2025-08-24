@@ -1,13 +1,13 @@
-# 忽略所有文件
-*
+# # 忽略所有文件
+# *
 
-# 但保留overlay目录
-!overlay/
-!overlay/**
+# # 但保留overlay目录
+# !overlay/
+# !overlay/**
 
-# 保留.gitignore本身
-!.gitignore
+# # 保留.gitignore本身
+# !.gitignore
 
-# 可选：保留README等文档
-!README.md
-!*.md
+# # 可选：保留README等文档
+# !README.md
+# !*.md
